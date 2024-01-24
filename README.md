@@ -119,3 +119,72 @@ Also, enter the contents of the bye.rb file as follows:
 <div> First name: <%=params.fetch("first")%> </div>
 <div> Last name: <%=params.fetch("last")%> </div>
 ```
+6. For number squaring calculator implementation, create two erb files within the views folder called new_sqare_calc.erb and square_results.erb. new_square_calc.erb is the page that contains the form into which a user inputs the number. Upon clicking on the button, the form directs the page to square_results.erb to display the results (see below).
+
+```
+#new_square_calc.erb
+
+<h1> Calculate the square of a number <h1>
+
+<form action="/square/results">
+  <div>
+    <label for="user_number">Enter a number</label>
+  </div>
+  <div>
+    <input type="text" name="number" id="user_number" placeholder="What number do you want to take the square of?">
+  </div>
+  <button>Calculate square</button>
+</form>
+```
+
+```
+#square_results.erb
+
+<h1>
+  Square Results
+</h1>
+
+<dl>
+  <dt>
+    Number
+  </dt>
+  <dd>
+    <%=params.fetch("number")%>
+  </dd>
+
+  <dt>
+    Square
+  </dt>
+  <dd>
+    <%=params.fetch("number").to_f**2%>
+  </dd>
+</dl>
+
+<a href="/square/new">
+  Calculate another square
+</a>
+
+  </body>
+</html>
+```
+
+7. Instead of performing the arithmetic calculation within html tags, we can delegate the task to ruby within the app.rb file and pass it to the square_results.erb file with a variable called @the_num. Recall that the variable is preceeded with the symbol @ (see below for the modification to the app.eb and square_results.erb files).
+
+```
+#app.rb
+
+...
+get("/square/results") do
+  @the_num = params.fetch("number").to_f
+  @the_result = @the_num**2
+  
+  erb(:square_results)
+end
+...
+```
+
+```
+#square_results.erb
+
+
+```
