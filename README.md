@@ -185,6 +185,120 @@ end
 
 ```
 #square_results.erb
+...
+<dl>
+  <dt>
+    Number
+  </dt>
+  <dd>
+    <%=@the_num%>
+  </dd>
 
+  <dt>
+    Square
+  </dt>
+  <dd>
+    <%=@the_result%>
+  </dd>
+</dl>
+...
+```
 
+8. Follow similar steps to add the square root operation, as follows.
+- Create square_root_results.erb
+- Create new_square_root_calc.erb
+- Add a new section in app.rb, as below.
+
+```
+get("/square_root/new") do
+  erb(:new_square_root_calc)
+end
+
+get("/square_root/results") do
+  @the_num = params.fetch("number").to_f
+  @the_result = @the_num**(0.5)
+
+  erb(:square_root_results)
+end
+```
+9. To display the square form on the main page, modify app.rb as follows.
+
+```
+get("/") do
+  erb(:new_square_calc)
+end
+```
+
+10. Likewise, to enable the payment operations add payment_calc.erb and payment_results.erb.  
+
+11. Tried to enable .to_fs():
+- To the Gemfile, add gem "activesupport"
+- Install Gemfile by typing in the terminal ```bundle install```
+- within the app.rb file, add the command ```"active_support/all"```
+
+The above steps, however, did not work.
+
+12. Define the payment/results route as follows.
+
+```
+get("/payment/results") do
+  @apr = params.fetch("user_apr").to_f.round(4) #.to_fs(:percentage, {:precision => 4})
+  @years = params.fetch("user_years").to_i
+  @pv = params.fetch("user_pv").to_f.round(2) #to_fs(:currency)
+
+  def payment(apr, pv, years)
+    r = apr / 1200
+    n = years*12
+
+    numerator = r*pv
+    denominator= 1-(1+r)**-n
+
+    return numerator/denominator
+  end
+
+  @the_result = payment(@apr, @pv, @years).round(2)
+
+  erb(:payment_results)
+end
+```
+13. As a temporary solution, format the outputs within the payment_calc.erb file as follows.
+
+```
+    <h1>
+  Payment Results
+</h1>
+
+<dl>
+  <dt>
+    APR
+  </dt>
+  <dd>
+    <%=sprintf('%.4f', @apr)%> %
+  </dd>
+
+  <dt>
+    Number of years
+  </dt>
+  <dd>
+    <%=@years%>
+  </dd>
+
+  <dt>
+    Principal
+  </dt>
+  <dd>
+    $<%=sprintf('%.2f',@pv)%>
+  </dd>
+
+  <dt>
+    Payment
+  </dt>
+  <dd>
+    $<%=sprintf('%.2f',@the_result)%>
+  </dd>
+</dl>
+
+<a href="/payment/new">
+  Calculate another payment
+</a>
 ```
