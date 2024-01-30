@@ -38,9 +38,12 @@ get("/payment/new") do
 end
 
 get("/payment/results") do
-  @apr = params.fetch("user_apr").to_f #.to_fs(:percentage, {:precision => 4})
+  """Get apr (user_apr), number of years (user_years), and principal (user_pv) from user via form.
+  """
+
+  @apr = params.fetch("user_apr").to_f
   @years = params.fetch("user_years").to_i
-  @pv = params.fetch("user_pv").to_f #to_fs(:currency)
+  @pv = params.fetch("user_pv").to_f
 
   def payment(apr, pv, years)
     r = apr / 1200
@@ -49,7 +52,7 @@ get("/payment/results") do
     numerator = r*pv
     denominator= 1-(1+r)**-n
 
-    res = sprintf('%.2f', numerator/denominator) #format to two decimal places
+    res = numerator/denominator #format to two decimal places
 
     return res
   end
@@ -59,6 +62,21 @@ get("/payment/results") do
   erb(:payment_results)
 end
 
+get("/random/new") do
+  """Get minimum (user_min) and maximum (user_max) range from user via form.
+  """
+  erb(:random_calc)
+end
+
+get("/random/results") do
+
+  @min_no = params.fetch("user_min").to_f
+  @max_no = params.fetch("user_max").to_f
+  
+  @pick_random = rand(@min_no...@max_no)
+
+  erb(:random_results)
+end
 
 get("/") do
   "

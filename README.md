@@ -2,6 +2,8 @@
 
 [Notes for this project are here.](https://learn.firstdraft.com/lessons/100)
 
+Here is the link to the target: https://omnicalc-1.matchthetarget.com/
+
 Activities:
 
 1. Run the code in codespace. In the terminal, type ruby app.rb. Open a browser from the PORTS tab. Here is what I see:
@@ -302,3 +304,64 @@ end
   Calculate another payment
 </a>
 ```
+14. I got the .to_fs() method to work by placing it in payment_results.erb, as follows.
+
+```
+    <h1>
+  Payment Results
+</h1>
+
+<dl>
+  <dt>
+    APR
+  </dt>
+  <dd>
+    <%=@apr.to_fs(:percentage, {:precision => 4})%>
+  </dd>
+
+  <dt>
+    Number of years
+  </dt>
+  <dd>
+    <%=@years%>
+  </dd>
+
+  <dt>
+    Principal
+  </dt>
+  <dd>
+    <%=@pv.to_fs(:currency)%>
+  </dd>
+
+  <dt>
+    Payment
+  </dt>
+  <dd>
+    <%=@the_result.to_fs(:currency)%>
+  </dd>
+</dl>
+
+<a href="/payment/new">
+  Calculate another payment
+</a>
+```
+
+The ```require "active_support/all"``` statement in app.rb is indeed needed. If I remove it, the method stops working.
+
+15. Note that you will have to call the `params.fetch()` method in the erb file that is transmitted by the form, otherwise you will get an error. For example, the `params.fetch()` method is called within random_results.erb, rather than random_calc.erb.
+
+16. Finally, below is code within the app.rb file for generating the random numbers for the "Random with Form" tab. 
+
+```
+get("/random/results") do
+
+  @min_no = params.fetch("user_min").to_f
+  @max_no = params.fetch("user_max").to_f
+  
+  @pick_random = rand(@min_no...@max_no)
+
+  erb(:random_results)
+end
+```
+
+***

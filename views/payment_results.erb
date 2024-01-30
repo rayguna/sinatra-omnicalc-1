@@ -7,7 +7,7 @@
     APR
   </dt>
   <dd>
-    <%=sprintf('%.4f', @apr)%> %
+    <%=@apr.to_fs(:percentage, {:precision => 4})%>
   </dd>
 
   <dt>
@@ -21,14 +21,14 @@
     Principal
   </dt>
   <dd>
-    $<%=sprintf('%.2f',@pv)%>
+    <%=@pv.to_fs(:currency)%>
   </dd>
 
   <dt>
     Payment
   </dt>
   <dd>
-    $<%=sprintf('%.2f',@the_result)%>
+    <%=@the_result.to_fs(:currency)%>
   </dd>
 </dl>
 
